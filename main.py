@@ -145,13 +145,13 @@ def create_data(sensor_id: Annotated [int, Form()], temperature: Annotated[int, 
     datetime_time = datetime.strptime(time, "%H:%M")
     data = {'sensor_id': sensor_id, 'temperature': temperature/10, 'moisture': moisture/10, 'date': datetime_date.date(), 
             'time': datetime_time.time()}
-    conf = db.session.query(models.Sensor).filter(models.Sensor.id == sensor_id).first()
+    sensor = db.session.query(models.Sensor).filter(models.Sensor.sensor_id == sensor_id).first()
     db_measurement = models.SensorData(sensor_id=data["sensor_id"], temperature=data["temperature"], moisture=data["moisture"], 
                                        date=data["date"], time=data["time"])
     try:
         db.session.add(db_measurement)
         db.session.commit()
-        return f'$1&${conf.config}&#'
+        return f'$1&${sensor.config}&#'
     except Exception as e:
         print(e)
         return '$0&$0&#'

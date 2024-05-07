@@ -1,6 +1,6 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Boolean, Float, Date, Time, ForeignKey, DateTime
-#from geoalchemy2 import Geometry
+from geoalchemy2 import Geometry
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
@@ -27,7 +27,7 @@ class Parcel(Base):
     owner_id = Column(Integer, ForeignKey('users.id', ondelete="CASCADE"), nullable=False)
     name = Column(String)
     size = Column(Float)
-    #location = Column(Geometry(geometry_type='POLYGON', srid=4326, spatial_index=True))
+    location = Column(Geometry(geometry_type='POLYGON', srid=4326, spatial_index=True))
     date = Column(DateTime(timezone=True), server_default=func.now())
     
     owners = relationship("User", back_populates="parcels")
@@ -38,8 +38,9 @@ class Sensor(Base):
     
     id = Column(Integer, primary_key=True)
     parcel_id = Column(Integer, ForeignKey('parcels.id', ondelete="CASCADE"), nullable=False)
+    sensor_id = Column(Integer, unique=True, nullable=False)
     config = Column(Integer)
-    #location = Column(Geometry(geometry_type='POINT', srid=4326, spatial_index=True))
+    location = Column(Geometry(geometry_type='POINT', srid=4326, spatial_index=True))
     date = Column(DateTime(timezone=True), server_default=func.now())
     
     sensor_locations = relationship("Parcel", back_populates="devices")
@@ -49,7 +50,7 @@ class SensorData(Base):
     __tablename__ = "sensor_data"
     
     id = Column(Integer, primary_key=True)
-    sensor_id = Column(Integer,ForeignKey('sensors.id', ondelete="CASCADE"), nullable=False)
+    sensor_id = Column(Integer, nullable=False)
     temperature = Column(Float)
     moisture = Column(Float)
     date = Column(Date)
