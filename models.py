@@ -10,7 +10,7 @@ class User(Base):
     __tablename__ = "users"
     
     id = Column(Integer, primary_key=True)
-    email = Column(String, nullable=False, unique=True)
+    email = Column(String, unique=True)
     hashed_password = Column(String)
     phone = Column(BigInteger)
     is_admin = Column(Boolean)
@@ -24,8 +24,8 @@ class Parcel(Base):
     __tablename__ = "parcels"
     
     id = Column(Integer, primary_key=True)
-    owner_id = Column(Integer, ForeignKey('users.id', ondelete="CASCADE"), nullable=False)
-    crop_id = Column(Integer, ForeignKey('crops.id', ondelete='CASCADE'), nullable=False)
+    owner_id = Column(Integer, ForeignKey('users.id', ondelete="CASCADE"))
+    crop_id = Column(Integer, ForeignKey('crops.id', ondelete='CASCADE'))
     name = Column(String)
     location = Column(Geometry(geometry_type='POLYGON', srid=4326, spatial_index=True))
     sow_complete = Column(Boolean, default=False)
@@ -39,8 +39,8 @@ class Sensor(Base):
     __tablename__ = "sensors"
     
     id = Column(Integer, primary_key=True)
-    parcel_id = Column(Integer, ForeignKey('parcels.id', ondelete="CASCADE"), nullable=False)
-    sensor_id = Column(Integer, unique=True, nullable=False)
+    parcel_id = Column(Integer, ForeignKey('parcels.id', ondelete="CASCADE"))
+    sensor_id = Column(Integer, unique=True)
     config = Column(Integer)
     location = Column(Geometry(geometry_type='POINT', srid=4326, spatial_index=True))
     date = Column(DateTime(timezone=True), server_default=func.now())
@@ -83,7 +83,7 @@ class Alert(Base):
     __tablename__ = "alerts"
     
     id = Column(Integer, primary_key=True)
-    parcel_id = Column(Integer, ForeignKey('parcels.id', ondelete="CASCADE"), nullable=False)
+    parcel_id = Column(Integer, ForeignKey('parcels.id', ondelete="CASCADE"))
     text = Column(String)
     is_active = Column(Boolean)
     date = Column(DateTime(timezone=True), server_default=func.now())
@@ -94,7 +94,7 @@ class SensorData(Base):
     __tablename__ = "sensor_data"
     
     id = Column(Integer, primary_key=True)
-    sensor_id = Column(Integer, ForeignKey('sensors.sensor_id'), nullable=False)
+    sensor_id = Column(Integer, ForeignKey('sensors.sensor_id'))
     temperature = Column(Float)
     moisture = Column(Float)
     date = Column(Date)

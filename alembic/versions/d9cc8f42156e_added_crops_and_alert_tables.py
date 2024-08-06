@@ -50,7 +50,7 @@ def upgrade() -> None:
     op.add_column('users', sa.Column('email_alert', sa.Boolean()))
     op.add_column('users', sa.Column('sms_alert', sa.Boolean()))
     op.drop_column('parcels', 'size')
-    op.add_column('parcels', sa.Column('crop_id', sa.Integer(), nullable=False))
+    op.add_column('parcels', sa.Column('crop_id', sa.Integer(), nullable=True))
     op.create_foreign_key('fk_parcels_crops', 'parcels', 'crops', ['crop_id'], ['id'], ondelete="CASCADE")
     # ### end Alembic commands ###
 
